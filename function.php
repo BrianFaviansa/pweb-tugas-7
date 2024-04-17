@@ -13,13 +13,6 @@ if (empty($conn->error) == false) {
 
 $rows = [];
 
-function myPost($key)
-{
-  if (isset($_POST[$key])) {
-    return $_POST[$key];
-  }
-  return '';
-}
 
 function fetchAll()
 {
@@ -68,11 +61,33 @@ function fetchOne($id)
 }
 
 
-function store($tanggal, $suhu, $curah_hujan, $kecepatan_angin)
+function store($data)
 {
   global $conn;
+  $tanggal = $data['tanggal'];
+  $suhu = $data['suhu'];
+  $curah_hujan = $data['curah_hujan'];
+  $kecepatan_angin = $data['kecepatan_angin'];
+
   $stmt = $conn->prepare('INSERT INTO tracking_cuaca (tanggal,suhu,curah_hujan,kecepatan_angin) VALUES(?,?,?,?)');
   $stmt->bind_param("ssss", $tanggal, $suhu, $curah_hujan, $kecepatan_angin);
+  $stmt->execute();
+
+  $stmt->close();
+  $conn->close();
+  return true;
+}
+
+function update($data) {
+  global $conn;
+  $id = $data['id'];
+  $tanggal = $data['tanggal'];
+  $suhu = $data['suhu'];
+  $curah_hujan = $data['curah_hujan'];
+  $kecepatan_angin = $data['kecepatan_angin'];
+
+  $stmt = $conn->prepare('UPDATE tracking_cuaca SET tanggal=?, suhu=?, curah_hujan=?, kecepatan_angin=? WHERE id=?');
+  $stmt->bind_param("ssssi", $tanggal, $suhu, $curah_hujan, $kecepatan_angin, $id);
   $stmt->execute();
 
   $stmt->close();

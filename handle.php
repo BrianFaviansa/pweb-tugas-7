@@ -4,20 +4,22 @@ require_once "function.php";
 
 if (isset($_POST["aksi"]))
   if ($_POST["aksi"] == "add") {
-    $tanggal = myPost("tanggal");
-    $suhu = myPost("suhu");
-    $curah_hujan = myPost("curah_hujan");
-    $kecepatan_angin = myPost("kecepatan_angin");
-
-    $sukses = store($tanggal, $suhu, $curah_hujan, $kecepatan_angin);
+    $sukses = store($_POST);
     if ($sukses) {
       $_SESSION["alert"] = "Data berhasil ditambahkan";
       header("Location: index.php");
     } else {
       echo $stmt;
     }
+  } else if ($_POST["aksi"] == "edit") {
+    $sukses = update($_POST);
+    if ($sukses) {
+      $_SESSION["alert"] = "Data berhasil diperbarui";
+      header("Location: index.php");
+    } else {
+      echo $stmt;
+    }
   }
-
 
 if (isset($_GET["hapus"])) {
   $sukses = destroy($_GET);
